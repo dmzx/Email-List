@@ -1,0 +1,37 @@
+{
+	"name": "dmzx/emaillist",
+	"type": "phpbb-extension",
+	"description": "Allows a board forum owner to download and save a list of emails of users on the forum.",
+	"homepage": "http://www.dmzx-web.net",
+	"version": "1.0.0",
+	"time": "2015-07-11",
+	"keywords": ["phpbb", "extension", "emaillist"],
+	"license": "GPL-2.0",
+	"authors": [
+		{
+			"name": "dmzx",
+			"homepage": "http://www.dmzx-web.net",
+			"email": "info@dmzx-web.net",
+			"role": "Extension Lead Developer"
+		},
+		{
+			"name": "Rich McGirr",
+			"homepage": "http://rmcgirr83.org",
+			"role": "Author"
+		}
+	],
+	"require": {
+		"php": ">=5.3.3"
+	},
+	"extra": {
+		"display-name": "Email List",
+		"soft-require": {
+			"phpbb/phpbb": "3.1.*"
+		},
+		"version-check": {
+			"host": "www.phpbb.com",
+			"directory": "/customise/db/extension/",
+			"filename": "version_check"
+		}
+	}
+}

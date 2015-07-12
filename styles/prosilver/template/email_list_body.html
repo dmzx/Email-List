@@ -1,0 +1,60 @@
+<!-- INCLUDE overall_header.html -->
+
+<h2>{PAGE_TITLE}</h2>
+
+<div class="action-bar top">
+	<!-- IF .pagination or TOTAL_USERS -->
+	<div class="pagination">
+		<a href="{U_CSV_LIST}">{L_EXPORT_LIST}</a> &bull; {TOTAL_USERS}
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			&bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+	<!-- ENDIF -->
+</div>
+
+<div class="forumbg forumbg-table">
+	<div class="inner">
+		<table class="table1" cellspacing="1" padding="1">
+		 <thead>
+			<tr>
+				<th class="table1" style="text-align:center;"> # </th>
+				<th class="table1" style="text-align:center;">{L_SORT_USERNAME}</th>
+				<th class="table1" style="text-align:center;">{L_EMAIL_ADDRESS}</th>
+				<th class="table1">{L_SORT_JOINED}</th>
+				<th class="table1">{L_LAST_VISIT}</th>
+			</tr>
+		 </thead>
+		 <tbody>
+			<!-- IF .list -->
+				<!-- BEGIN list -->
+				<tr class="<!-- IF list.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
+					<td style="text-align:center;">{list.ID}</td>
+					<td style="text-align:center;">{list.USERNAME_FULL}</td>
+					<td style="text-align:center;"><a href="mailto:{list.EMAIL}">{list.EMAIL}</a></td>
+					<td style="text-align:center;">{list.REGDATE}</td>
+					<td style="text-align:center;">{list.LASTVISIT}</td>
+				</tr>
+				<!-- END list -->
+			<!-- ENDIF -->
+		 </tbody>
+		</table>
+	</div>
+</div>
+
+<div class="action-bar bottom">
+	<!-- IF .pagination or TOTAL_USERS -->
+	<div class="pagination">
+		{TOTAL_USERS}
+		<!-- IF .pagination -->
+			<!-- INCLUDE pagination.html -->
+		<!-- ELSE -->
+			&bull; {PAGE_NUMBER}
+		<!-- ENDIF -->
+	</div>
+	<!-- ENDIF -->
+</div>
+
+<!-- INCLUDE overall_footer.html -->
