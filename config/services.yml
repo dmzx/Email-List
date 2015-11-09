@@ -13,6 +13,7 @@ services:
         class: dmzx\emaillist\event\listener
         arguments:
             - @controller.helper
+            - %core.php_ext%
             - @template
             - @user
         tags:
