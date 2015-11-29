@@ -1,5 +1,7 @@
 # Email List Extension
 
+[![Build Status](https://travis-ci.org/dmzx/Email-List.svg?branch=master)](https://travis-ci.org/dmzx/Email-List)
+
 ## Install
 
 1. Download the latest release.

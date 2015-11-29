@@ -149,4 +149,4 @@ class emaillist
 
 		page_footer();
 	}
-}	
+}
