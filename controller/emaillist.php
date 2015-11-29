@@ -8,6 +8,7 @@
 */
 
 namespace dmzx\emaillist\controller;
+use phpbb\exception\http_exception;
 
 class emaillist
 {
@@ -45,7 +46,14 @@ class emaillist
 	*
 	*/
 
-	public function __construct(\phpbb\config\config $config, \phpbb\controller\helper $helper, \phpbb\template\template $template, \phpbb\user $user, \phpbb\db\driver\driver_interface $db, \phpbb\request\request $request, \phpbb\pagination $pagination)
+	public function __construct(
+		\phpbb\config\config $config,
+		\phpbb\controller\helper $helper,
+		\phpbb\template\template $template,
+		\phpbb\user $user,
+		\phpbb\db\driver\driver_interface $db,
+		\phpbb\request\request $request,
+		\phpbb\pagination $pagination)
 
 	{
 		$this->config = $config;
@@ -59,62 +67,21 @@ class emaillist
 
 	public function handle_emaillist()
 	{
-		// add lang file
-		$this->user->add_lang_ext('dmzx/emaillist', 'common');
-
-		// add a mode for a CSV Listing
-		$mode = $this->request->variable('mode', '');
-		$start = $this->request->variable('start', 0);
-
 		// Founders only access
 		if ($this->user->data['user_type'] != USER_FOUNDER)
 		{
-			trigger_error('NOT_AUTHORISED');
+			throw new http_exception(401, 'NOT_AUTHORISED');
 		}
 
-		if ($mode == 'list')
-		{
-			$csv_output = trim($this->config['sitename']) . ' ' . $this->user->lang['EMAIL'];
-			$csv_output .= "\n";
-			$csv_output .= '#,' . $this->user->lang['USERNAME'] . ',' . $this->user->lang['EMAIL_ADDRESS'] . ',' . $this->user->lang['SORT_JOINED'] . ',' . $this->user->lang['LAST_VISIT'];
-			$csv_output .= "\n";
-			//Pull Users from the database
-			$sql = 'SELECT FROM_UNIXTIME(user_regdate) AS regdate, user_id, username, user_email, FROM_UNIXTIME(user_lastvisit) AS lastvisit
-				FROM ' . USERS_TABLE . '
-				WHERE user_type <> ' .	USER_IGNORE . '
-				ORDER BY user_id';
-			$result = $this->db->sql_query($sql);
-			while ($row = $this->db->sql_fetchrow($result))
-			{
-				$csv_output .= $row['user_id'] . ',' . $row['username'] . ',' . $row['user_email'] . ',' . $row['regdate'] .',' . $row['lastvisit'];
-				$csv_output .="\n";
-			}
-			$this->db->sql_freeresult($result);
-			header("Content-type: application/vnd.ms-excel");
-			header("Content-disposition:	attachment; filename=" . str_replace(" ", "_", $this->config['sitename']) . '_' . $this->user->lang['EMAIL'] . 's_' . date("Y-m-d").".csv");
-			print $csv_output;
-			exit;
-		}
+		// add lang file
+		$this->user->add_lang_ext('dmzx/emaillist', 'common');
 
-		// How many Users do we have?
-		$sql = 'SELECT COUNT(user_id) AS total_users
-			FROM ' . USERS_TABLE . '
-			WHERE user_type <> ' .	USER_IGNORE;
-		$result = $this->db->sql_query($sql);
-		$total_users = (int) $this->db->sql_fetchfield('total_users');
-		$this->db->sql_freeresult($result);
-
-		$pagination_url = $this->helper->route('dmzx_emaillist_controller');
-
-		// want more to display...change the 20 to a higher number
-		$tf = 20;
+		$start = $this->request->variable('start', 0);
+		$group_id = $this->request->variable('group_select', 0);
 
 		//Pull Users from the database
-		$sql = 'SELECT *
-			FROM ' . USERS_TABLE . '
-			WHERE user_type <> ' .	USER_IGNORE . '
-			ORDER BY user_id';
-		$result = $this->db->sql_query_limit($sql, $tf, $start);
+		$sql = $this->sql_emaillist($group_id);
+		$result = $this->db->sql_query_limit($sql, $this->config['posts_per_page'], $start);
 
 		// Assign specific vars
 		while ($row = $this->db->sql_fetchrow($result))
@@ -123,7 +90,7 @@ class emaillist
 				'ID'				=> $row['user_id'],
 				'EMAIL'				=> $row['user_email'],
 				'REGDATE'			=> $this->user->format_date($row['user_regdate']),
-				'LASTVISIT'			=> $this->user->format_date($row['user_lastvisit']),
+				'LASTVISIT'			=> (!empty($row['user_lastvisit'])) ? $this->user->format_date($row['user_lastvisit']) : '-',
 				'USERNAME_FULL'		=> get_username_string('full', $row['user_id'], $row['username'], $row['user_colour']),
 				'USERNAME'			=> get_username_string('username', $row['user_id'], $row['username'], $row['user_colour']),
 				'USER_COLOR'		=> get_username_string('colour', $row['user_id'], $row['username'], $row['user_colour']),
@@ -132,21 +99,99 @@ class emaillist
 		}
 		$this->db->sql_freeresult($result);
 
+		// for counting of total users
+		$result = $this->db->sql_query($sql);
+		$row2 = $this->db->sql_fetchrowset($result);
+		$total_users = sizeof($row2);
+		$this->db->sql_freeresult($result);
+		unset($row2);
+
 		//Start pagination
-		$this->pagination->generate_template_pagination($pagination_url, 'pagination', 'start', $total_users, $tf, $start);
+		$this->pagination->generate_template_pagination($this->helper->route('dmzx_emaillist_controller'), 'pagination', 'start', $total_users, $this->config['posts_per_page'], $start);
 
 		$this->template->assign_vars(array(
-			'U_CSV_LIST'		=> $this->helper->route('dmzx_emaillist_controller', array('mode' => 'list')),
-			'TOTAL_USERS'		=> ($total_users == 1) ? $this->user->lang['USER_COUNT'] : sprintf($this->user->lang['USER_COUNTS'], $total_users),
+			'TOTAL_USERS'		=> $this->user->lang('USER_COUNT', (int) $total_users),
+			'GROUPS_SELECT'		=> (!empty($group_id)) ? $this->get_groups($group_id) : $this->get_groups(0),
+			'U_CSV_LIST'		=> (!empty($total_users)) ? $this->helper->route('dmzx_emaillist_csv', array('group_id' => $group_id)) : '',
+			'U_GROUPS'			=> $this->helper->route('dmzx_emaillist_controller'),
 		));
 
-		// Output page
-		page_header($this->user->lang['EMAIL_LIST']);
+		return $this->helper->render('email_list_body.html', $this->user->lang('EMAIL_LIST'));		// Output page
+	}
 
-		$this->template->set_filenames(array(
-			'body' => 'email_list_body.html')
-		);
+	public function csv_list($group_id = 0)
+	{
+		// Founders only access
+		if ($this->user->data['user_type'] != USER_FOUNDER)
+		{
+			throw new http_exception(401, 'NOT_AUTHORISED');
+		}
 
-		page_footer();
+		$csv_output = trim($this->config['sitename']) . ' ' . $this->user->lang['EMAIL'];
+		$csv_output .= "\n";
+		$csv_output .= '#,' . $this->user->lang['USERNAME'] . ',' . $this->user->lang['EMAIL_ADDRESS'] . ',' . $this->user->lang['SORT_JOINED'] . ',' . $this->user->lang['LAST_VISIT'];
+		$csv_output .= "\n";
+
+		$sql = $this->sql_emaillist($group_id);
+		$result = $this->db->sql_query($sql);
+
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$csv_output .= $row['user_id'] . ',' . $row['username'] . ',' . $row['user_email'] . ',' . gmdate("Y-m-d",$row['user_regdate']) .',' . gmdate("Y-m-d",$row['user_lastvisit']);
+			$csv_output .="\n";
+		}
+		$this->db->sql_freeresult($result);
+
+		header("Content-type: application/vnd.ms-excel");
+		header("Content-disposition:  attachment; filename=" . str_replace(" ", "_", $this->config['sitename']) . '_' . $this->user->lang['EMAIL'] . 's_' . date("Y-m-d").".csv");
+		print $csv_output;
+		exit_handler();
+	}
+
+	private function sql_emaillist($group_id = 0)
+	{
+		if (empty($group_id))
+		{
+			$sql = 'SELECT *
+				FROM ' . USERS_TABLE . '
+				WHERE ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+				ORDER BY user_id';
+		}
+		else
+		{
+			$sql = 'SELECT ug.*, u.username, u.user_email, u.user_lastvisit, u.user_regdate, u.user_colour
+				FROM ' . USER_GROUP_TABLE . ' ug
+				LEFT JOIN ' . USERS_TABLE . ' u ON ug.user_id = u.user_id
+				WHERE ug.group_id = ' . (int) $group_id .  ' AND ' . $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+				ORDER BY ug.user_id';
+		}
+		return $sql;
+	}
+
+
+	/**
+	 * function to return groups that are allowed
+	 */
+	private function get_groups($group_id)
+	{
+		$ignore_groups = array('BOTS', 'GUESTS');
+
+		$sql = 'SELECT group_name, group_id, group_type
+			FROM ' . GROUPS_TABLE . '
+			WHERE ' . $this->db->sql_in_set('group_name', $ignore_groups, true) . '
+			ORDER BY group_name ASC';
+		$result = $this->db->sql_query($sql);
+
+		$selected = ($group_id == 0) ? ' selected="selected"' : '';
+		$s_group_options = "<option value='0'$selected>&nbsp;{$this->user->lang['ALL_GROUPS']}&nbsp;</option>";
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$selected = ($row['group_id'] == $group_id) ? ' selected="selected"' : '';
+			$group_name = ($row['group_type'] == GROUP_SPECIAL) ? $this->user->lang['G_' . $row['group_name']] : $row['group_name'];
+			$s_group_options .= "<option value='{$row['group_id']}'$selected>$group_name</option>";
+		}
+		$this->db->sql_freeresult($result);
+
+		return $s_group_options;
 	}
 }

@@ -1,11 +1,20 @@
 <!-- INCLUDE overall_header.html -->
 
 <h2>{PAGE_TITLE}</h2>
+<form method="post" action="{U_GROUPS}">
+	<fieldset>
+			<select id="group_select" name="group_select">{GROUPS_SELECT}</select>
+			<input type="submit" name="group" value="{L_GO}" class="button2" />
+	</fieldset>
+</form>
 
 <div class="action-bar top">
 	<!-- IF .pagination or TOTAL_USERS -->
 	<div class="pagination">
-		<a href="{U_CSV_LIST}">{L_EXPORT_LIST}</a> &bull; {TOTAL_USERS}
+		<!-- IF U_CSV_LIST -->
+		<a href="{U_CSV_LIST}">{L_EXPORT_LIST}</a> &bull;
+		<!-- ENDIF -->
+		{TOTAL_USERS}
 		<!-- IF .pagination -->
 			<!-- INCLUDE pagination.html -->
 		<!-- ELSE -->
@@ -38,6 +47,10 @@
 					<td style="text-align:center;">{list.LASTVISIT}</td>
 				</tr>
 				<!-- END list -->
+			<!-- ELSE -->
+				<tr class="bg1">
+					<td colspan="5">{L_NO_USERS_IN_GROUP}</td>
+				</tr>
 			<!-- ENDIF -->
 		 </tbody>
 		</table>
