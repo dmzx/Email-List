@@ -8,6 +8,7 @@
 */
 
 namespace dmzx\emaillist\controller;
+
 use phpbb\exception\http_exception;
 
 class emaillist
@@ -54,7 +55,6 @@ class emaillist
 		\phpbb\db\driver\driver_interface $db,
 		\phpbb\request\request $request,
 		\phpbb\pagination $pagination)
-
 	{
 		$this->config = $config;
 		$this->helper = $helper;
