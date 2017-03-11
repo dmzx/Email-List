@@ -1,10 +1,11 @@
 <!-- INCLUDE overall_header.html -->
 
 <h2>{PAGE_TITLE}</h2>
+
 <form method="post" action="{U_GROUPS}">
 	<fieldset>
-			<select id="group_select" name="group_select">{GROUPS_SELECT}</select>
-			<input type="submit" name="group" value="{L_GO}" class="button2" />
+		<select id="group_select" name="group_select">{GROUPS_SELECT}</select>
+		<input type="submit" name="group" value="{L_GO}" class="button2" />
 	</fieldset>
 </form>
 
@@ -27,17 +28,17 @@
 <div class="forumbg forumbg-table">
 	<div class="inner">
 		<table class="table1" cellspacing="1" padding="1">
-		 <thead>
-			<tr>
-				<th class="table1" style="text-align:center;"> # </th>
-				<th class="table1" style="text-align:center;">{L_SORT_USERNAME}</th>
-				<th class="table1" style="text-align:center;">{L_EMAIL_ADDRESS}</th>
-				<th class="table1">{L_SORT_JOINED}</th>
-				<th class="table1">{L_LAST_VISIT}</th>
-			</tr>
-		 </thead>
-		 <tbody>
-			<!-- IF .list -->
+			<thead>
+				<tr>
+					<th class="table1" style="text-align:center;"> # </th>
+					<th class="table1" style="text-align:center;">{L_SORT_USERNAME}</th>
+					<th class="table1" style="text-align:center;">{L_EMAIL_ADDRESS}</th>
+					<th class="table1">{L_SORT_JOINED}</th>
+					<th class="table1">{L_LAST_VISIT}</th>
+				</tr>
+			</thead>
+			<tbody>
+				<!-- IF .list -->
 				<!-- BEGIN list -->
 				<tr class="<!-- IF list.S_ROW_COUNT is even -->bg1<!-- ELSE -->bg2<!-- ENDIF -->">
 					<td style="text-align:center;">{list.ID}</td>
@@ -47,12 +48,12 @@
 					<td style="text-align:center;">{list.LASTVISIT}</td>
 				</tr>
 				<!-- END list -->
-			<!-- ELSE -->
+				<!-- ELSE -->
 				<tr class="bg1">
 					<td colspan="5">{L_NO_USERS_IN_GROUP}</td>
 				</tr>
-			<!-- ENDIF -->
-		 </tbody>
+				<!-- ENDIF -->
+			</tbody>
 		</table>
 	</div>
 </div>

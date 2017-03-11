@@ -37,12 +37,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'EMAIL_LIST'	=> 'Email List',
-	'EXPORT_LIST'	=> 'Export as CSV List',
-	'USER_COUNT'	=> array(
+	'EMAIL_LIST'		=> 'Email List',
+	'EXPORT_LIST'		=> 'Export as CSV List',
+	'USER_COUNT'		=> array(
 		1 => '%d user',
 		2 => '%d users',
 	),
-	'ALL_GROUPS'	=> 'All Groups',
+	'ALL_GROUPS'		=> 'All Groups',
 	'NO_USERS_IN_GROUP'	=> '<strong>No users are in this group</strong>',
 ));

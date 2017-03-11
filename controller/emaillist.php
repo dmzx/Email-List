@@ -10,51 +10,58 @@
 namespace dmzx\emaillist\controller;
 
 use phpbb\exception\http_exception;
+use phpbb\config\config;
+use phpbb\controller\helper;
+use phpbb\template\template;
+use phpbb\user;
+use phpbb\db\driver\driver_interface as db_interface;
+use phpbb\request\request_interface;
+use phpbb\pagination;
 
 class emaillist
 {
-	/** @var \phpbb\config\config */
+	/** @var config */
 	protected $config;
 
-	/** @var \phpbb\controller\helper */
+	/** @var helper */
 	protected $helper;
 
-	/** @var \phpbb\template\template */
+	/** @var template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var user */
 	protected $user;
 
-	/** @var \phpbb\db\driver\driver_interface */
+	/** @var db_interface */
 	protected $db;
 
-	/** @var \phpbb\request\request */
+	/** @var request_interface */
 	protected $request;
 
-	/** @var \phpbb\pagination */
+	/** @var pagination */
 	protected $pagination;
 
 	/**
 	* Constructor
 	*
-	* @param \phpbb\config\config				$config
-	* @param \phpbb\controller\helper			$helper
-	* @param \phpbb\template\template			$template
-	* @param \phpbb\user						$user
-	* @param \phpbb\db\driver\driver_interface	$db
-	* @param \phpbb\request\request				$request
-	* @param \phpbb\pagination					$pagination
+	* @param config					$config
+	* @param helper					$helper
+	* @param template				$template
+	* @param user					$user
+	* @param db_interface			$db
+	* @param request_interface		$request
+	* @param pagination				$pagination
 	*
 	*/
-
 	public function __construct(
-		\phpbb\config\config $config,
-		\phpbb\controller\helper $helper,
-		\phpbb\template\template $template,
-		\phpbb\user $user,
-		\phpbb\db\driver\driver_interface $db,
-		\phpbb\request\request $request,
-		\phpbb\pagination $pagination)
+		config $config,
+		helper $helper,
+		template $template,
+		user $user,
+		db_interface $db,
+		request_interface $request,
+		pagination $pagination
+	)
 	{
 		$this->config = $config;
 		$this->helper = $helper;
@@ -116,6 +123,11 @@ class emaillist
 			'U_GROUPS'			=> $this->helper->route('dmzx_emaillist_controller'),
 		));
 
+		$this->template->assign_block_vars('navlinks', array(
+			'FORUM_NAME' 	=> ($this->user->lang['EMAIL_LIST']),
+			'U_VIEW_FORUM'	=> $this->helper->route('dmzx_emaillist_controller'),
+		));
+
 		return $this->helper->render('email_list_body.html', $this->user->lang('EMAIL_LIST'));		// Output page
 	}
 
@@ -143,7 +155,7 @@ class emaillist
 		$this->db->sql_freeresult($result);
 
 		header("Content-type: application/vnd.ms-excel");
-		header("Content-disposition:  attachment; filename=" . str_replace(" ", "_", $this->config['sitename']) . '_' . $this->user->lang['EMAIL'] . 's_' . date("Y-m-d").".csv");
+		header("Content-disposition:	attachment; filename=" . str_replace(" ", "_", $this->config['sitename']) . '_' . $this->user->lang['EMAIL'] . 's_' . date("Y-m-d").".csv");
 		print $csv_output;
 		exit_handler();
 	}
@@ -162,12 +174,12 @@ class emaillist
 			$sql = 'SELECT ug.*, u.username, u.user_email, u.user_lastvisit, u.user_regdate, u.user_colour
 				FROM ' . USER_GROUP_TABLE . ' ug
 				LEFT JOIN ' . USERS_TABLE . ' u ON ug.user_id = u.user_id
-				WHERE ug.group_id = ' . (int) $group_id .  ' AND ' . $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+				WHERE ug.group_id = ' . (int) $group_id .	'
+					AND ' . $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . '
 				ORDER BY ug.user_id';
 		}
 		return $sql;
 	}
-
 
 	/**
 	 * function to return groups that are allowed
@@ -184,6 +196,7 @@ class emaillist
 
 		$selected = ($group_id == 0) ? ' selected="selected"' : '';
 		$s_group_options = "<option value='0'$selected>&nbsp;{$this->user->lang['ALL_GROUPS']}&nbsp;</option>";
+
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$selected = ($row['group_id'] == $group_id) ? ' selected="selected"' : '';

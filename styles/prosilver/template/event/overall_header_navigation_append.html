@@ -1,1 +1,8 @@
-<!-- IF S_EMAIL_LIST --><li class="small-icon icon-members"><a href="{U_EMAIL_LIST}" title="{L_EMAIL_LIST}" role="menuitem">{L_EMAIL_LIST}</a></li><!-- ENDIF -->
+<!-- IF S_EMAIL_LIST -->
+<li <!-- IF not PHPBB_IS_32 -->class="small-icon icon-members no-bulletin"<!-- ENDIF --> data-last-responsive="true">
+	<a href="{U_EMAIL_LIST}" title="{L_EMAIL_LIST}" role="menuitem">
+		<!-- IF PHPBB_IS_32 --><i class="icon fa fa-envelope" aria-hidden="true"></i><!-- ENDIF -->
+		<span>{L_EMAIL_LIST}</span>
+	</a>
+</li>
+<!-- ENDIF -->

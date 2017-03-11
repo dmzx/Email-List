@@ -38,12 +38,12 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'EMAIL_LIST'	=> 'قائمة الإيميلات',
-	'EXPORT_LIST'	=> 'التصدير إلى ملف CSV',
-	'USER_COUNT'	=> array(
+	'EMAIL_LIST'		=> 'قائمة الإيميلات',
+	'EXPORT_LIST'		=> 'التصدير إلى ملف CSV',
+	'USER_COUNT'		=> array(
 		1 => '%d عضو',
 		2 => '%d أعضاء',
 	),
-	'ALL_GROUPS'	=> 'جميع المجموعات',
+	'ALL_GROUPS'		=> 'جميع المجموعات',
 	'NO_USERS_IN_GROUP'	=> '<strong>لا يوجد أعضاء في هذه المجموعة</strong>',
 ));
