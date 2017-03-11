@@ -120,7 +120,7 @@ class emaillist
 			'TOTAL_USERS'		=> $this->user->lang('USER_COUNT', (int) $total_users),
 			'GROUPS_SELECT'		=> (!empty($group_id)) ? $this->get_groups($group_id) : $this->get_groups(0),
 			'U_CSV_LIST'		=> (!empty($total_users)) ? $this->helper->route('dmzx_emaillist_csv', array('group_id' => $group_id)) : '',
-			'U_GROUPS'			=> $this->helper->route('dmzx_emaillist_controller'),
+			'U_GROUPS_SELECT'	=> $this->helper->route('dmzx_emaillist_controller'),
 		));
 
 		$this->template->assign_block_vars('navlinks', array(
