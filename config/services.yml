@@ -16,6 +16,5 @@ services:
             - '%core.php_ext%'
             - '@template'
             - '@user'
-            - '@?files.factory'
         tags:
             - { name: event.listener }

@@ -2,5 +2,5 @@ dmzx_emaillist_controller:
     path: /emaillist
     defaults: { _controller: dmzx.emaillist.controller:handle_emaillist }
 dmzx_emaillist_csv:
-    pattern: /emaillist/{group_id}
+    path: /emaillist/{group_id}
     defaults: { _controller: dmzx.emaillist.controller:csv_list }

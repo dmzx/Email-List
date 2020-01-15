@@ -2,7 +2,7 @@
 /**
 *
 * @package phpBB Extension - Email List
-* @copyright (c) 2015 dmzx - http://www.dmzx-web.net
+* @copyright (c) 2015 dmzx - https://www.dmzx-web.net
 * @license http://opensource.org/licenses/gpl-2.0.php GNU General Public License v2
 *
 */
@@ -13,7 +13,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use phpbb\controller\helper;
 use phpbb\template\template;
 use phpbb\user;
-use phpbb\files\factory;
 
 class listener implements EventSubscriberInterface
 {
@@ -29,31 +28,25 @@ class listener implements EventSubscriberInterface
 	/** @var user */
 	protected $user;
 
-	/** @var factory */
-	protected $files_factory;
-
 	/**
 	* Constructor
 	*
 	* @param helper			$helper
-	* @param string		 $php_ext
+	* @param string		 	$php_ext
 	* @param template		$template
 	* @param user			$user
-	* @param factory		$files_factory
 	*/
 	public function __construct(
 		helper $helper,
 		$php_ext,
 		template $template,
-		user $user,
-		factory $files_factory = null
+		user $user
 	)
 	{
 		$this->helper 			= $helper;
 		$this->php_ext 			= $php_ext;
 		$this->template 		= $template;
 		$this->user 			= $user;
-		$this->files_factory 	= $files_factory;
 	}
 
 	static public function getSubscribedEvents()
@@ -89,7 +82,6 @@ class listener implements EventSubscriberInterface
 		$this->template->assign_vars(array(
 			'U_EMAIL_LIST' 		=> $this->helper->route('dmzx_emaillist_controller'),
 			'S_EMAIL_LIST'		=> ($this->user->data['user_type'] == USER_FOUNDER) ? true : false,
-			'PHPBB_IS_32'		=> ($this->files_factory !== null) ? true : false,
 		));
 	}
 }
