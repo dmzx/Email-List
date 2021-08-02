@@ -43,7 +43,7 @@ $lang = array_merge($lang, [
 	'USER_COUNT'		=> [
 		1 => '%d عضو',
 		2 => '%d أعضاء',
-    ],
+	],
 	'ALL_GROUPS'		=> 'جميع المجموعات',
 	'NO_USERS_IN_GROUP'	=> '<strong>لا يوجد أعضاء في هذه المجموعة</strong>',
 ]);

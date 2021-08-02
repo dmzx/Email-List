@@ -102,7 +102,7 @@ class emaillist
 				'USERNAME'			=> get_username_string('username', $row['user_id'], $row['username'], $row['user_colour']),
 				'USER_COLOR'		=> get_username_string('colour', $row['user_id'], $row['username'], $row['user_colour']),
 				'U_VIEW_PROFILE'	=> get_username_string('profile', $row['user_id'], $row['username'], $row['user_colour']),
-            ]);
+			]);
 		}
 		$this->db->sql_freeresult($result);
 
@@ -121,12 +121,12 @@ class emaillist
 			'GROUPS_SELECT'		=> (!empty($group_id)) ? $this->get_groups($group_id) : $this->get_groups(0),
 			'U_CSV_LIST'		=> (!empty($total_users)) ? $this->helper->route('dmzx_emaillist_csv', ['group_id' => $group_id]) : '',
 			'U_GROUPS_SELECT'	=> $this->helper->route('dmzx_emaillist_controller'),
-        ]);
+		]);
 
 		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME' 	=> ($this->user->lang['EMAIL_LIST']),
 			'U_VIEW_FORUM'	=> $this->helper->route('dmzx_emaillist_controller'),
-        ]);
+		]);
 
 		return $this->helper->render('email_list_body.html', $this->user->lang('EMAIL_LIST'));		// Output page
 	}
@@ -156,7 +156,7 @@ class emaillist
 
 		header("Content-type: application/vnd.ms-excel");
 		header("Content-disposition:	attachment; filename=" . str_replace(" ", "_", $this->config['sitename']) . '_' . $this->user->lang['EMAIL'] . 's_' . date("Y-m-d").".csv");
-        echo $csv_output;
+		echo $csv_output;
 		exit_handler();
 	}
 
