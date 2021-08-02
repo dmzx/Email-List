@@ -18,7 +18,7 @@ if (!defined('IN_PHPBB'))
 
 if (empty($lang) || !is_array($lang))
 {
-	$lang = array();
+	$lang = [];
 }
 
 // DEVELOPERS PLEASE NOTE
@@ -37,13 +37,13 @@ if (empty($lang) || !is_array($lang))
 // ’ » “ ” …
 //
 
-$lang = array_merge($lang, array(
+$lang = array_merge($lang, [
 	'EMAIL_LIST'		=> 'Email Lijst',
 	'EXPORT_LIST'		=> 'Exporteer als CSV Lijst',
-	'USER_COUNT'		=> array(
+	'USER_COUNT'		=> [
 		1 => '%d gebruiker',
 		2 => '%d gebruikers',
-	),
+    ],
 	'ALL_GROUPS'		=> 'Alle Groepen',
 	'NO_USERS_IN_GROUP'	=> '<strong>Er zitten geen gebruikers in deze groep</strong>',
-));
+]);

@@ -93,7 +93,7 @@ class emaillist
 		// Assign specific vars
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$this->template->assign_block_vars('list', array(
+			$this->template->assign_block_vars('list', [
 				'ID'				=> $row['user_id'],
 				'EMAIL'				=> $row['user_email'],
 				'REGDATE'			=> $this->user->format_date($row['user_regdate']),
@@ -102,7 +102,7 @@ class emaillist
 				'USERNAME'			=> get_username_string('username', $row['user_id'], $row['username'], $row['user_colour']),
 				'USER_COLOR'		=> get_username_string('colour', $row['user_id'], $row['username'], $row['user_colour']),
 				'U_VIEW_PROFILE'	=> get_username_string('profile', $row['user_id'], $row['username'], $row['user_colour']),
-			));
+            ]);
 		}
 		$this->db->sql_freeresult($result);
 
@@ -116,17 +116,17 @@ class emaillist
 		//Start pagination
 		$this->pagination->generate_template_pagination($this->helper->route('dmzx_emaillist_controller'), 'pagination', 'start', $total_users, $this->config['posts_per_page'], $start);
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'TOTAL_USERS'		=> $this->user->lang('USER_COUNT', (int) $total_users),
 			'GROUPS_SELECT'		=> (!empty($group_id)) ? $this->get_groups($group_id) : $this->get_groups(0),
-			'U_CSV_LIST'		=> (!empty($total_users)) ? $this->helper->route('dmzx_emaillist_csv', array('group_id' => $group_id)) : '',
+			'U_CSV_LIST'		=> (!empty($total_users)) ? $this->helper->route('dmzx_emaillist_csv', ['group_id' => $group_id]) : '',
 			'U_GROUPS_SELECT'	=> $this->helper->route('dmzx_emaillist_controller'),
-		));
+        ]);
 
-		$this->template->assign_block_vars('navlinks', array(
+		$this->template->assign_block_vars('navlinks', [
 			'FORUM_NAME' 	=> ($this->user->lang['EMAIL_LIST']),
 			'U_VIEW_FORUM'	=> $this->helper->route('dmzx_emaillist_controller'),
-		));
+        ]);
 
 		return $this->helper->render('email_list_body.html', $this->user->lang('EMAIL_LIST'));		// Output page
 	}
@@ -166,7 +166,7 @@ class emaillist
 		{
 			$sql = 'SELECT *
 				FROM ' . USERS_TABLE . '
-				WHERE ' . $this->db->sql_in_set('user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+				WHERE ' . $this->db->sql_in_set('user_type', [USER_NORMAL, USER_FOUNDER]) . '
 				ORDER BY user_id';
 		}
 		else
@@ -175,7 +175,7 @@ class emaillist
 				FROM ' . USER_GROUP_TABLE . ' ug
 				LEFT JOIN ' . USERS_TABLE . ' u ON ug.user_id = u.user_id
 				WHERE ug.group_id = ' . (int) $group_id .	'
-					AND ' . $this->db->sql_in_set('u.user_type', array(USER_NORMAL, USER_FOUNDER)) . '
+					AND ' . $this->db->sql_in_set('u.user_type', [USER_NORMAL, USER_FOUNDER]) . '
 				ORDER BY ug.user_id';
 		}
 		return $sql;
@@ -186,7 +186,7 @@ class emaillist
 	 */
 	private function get_groups($group_id)
 	{
-		$ignore_groups = array('BOTS', 'GUESTS');
+		$ignore_groups = ['BOTS', 'GUESTS'];
 
 		$sql = 'SELECT group_name, group_id, group_type
 			FROM ' . GROUPS_TABLE . '

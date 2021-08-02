@@ -1,5 +1,9 @@
 ## Email List Changelog
 
+### 1.0.4 - 2021-08-02
+
+- Code update.
+
 ### 1.0.3 - 2020-01-15
 
 - Drop support for 3.1.

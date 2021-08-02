@@ -51,10 +51,10 @@ class listener implements EventSubscriberInterface
 
 	static public function getSubscribedEvents()
 	{
-		return array(
+		return [
 			'core.viewonline_overwrite_location'	=> 'add_page_viewonline',
 			'core.page_header'						=> 'add_page_header_link',
-		);
+        ];
 	}
 
 	public function add_page_viewonline($event)
@@ -79,9 +79,9 @@ class listener implements EventSubscriberInterface
 		// add lang file
 		$this->user->add_lang_ext('dmzx/emaillist', 'common');
 
-		$this->template->assign_vars(array(
+		$this->template->assign_vars([
 			'U_EMAIL_LIST' 		=> $this->helper->route('dmzx_emaillist_controller'),
 			'S_EMAIL_LIST'		=> ($this->user->data['user_type'] == USER_FOUNDER) ? true : false,
-		));
+        ]);
 	}
 }
