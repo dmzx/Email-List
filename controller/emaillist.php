@@ -156,7 +156,7 @@ class emaillist
 
 		header("Content-type: application/vnd.ms-excel");
 		header("Content-disposition:	attachment; filename=" . str_replace(" ", "_", $this->config['sitename']) . '_' . $this->user->lang['EMAIL'] . 's_' . date("Y-m-d").".csv");
-		print $csv_output;
+        echo $csv_output;
 		exit_handler();
 	}
 
