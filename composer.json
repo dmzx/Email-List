@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "Allows a board forum owner to download and save a list of emails of users on the forum.",
 	"homepage": "https://www.dmzx-web.net",
-	"version": "1.0.3",
-	"time": "2020-01-15",
+	"version": "1.0.4",
+	"time": "2021-08-02",
 	"keywords": [
 		"phpbb",
 		"extension",

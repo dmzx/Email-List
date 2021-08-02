@@ -3,6 +3,8 @@
 ### 1.0.4 - 2021-08-02
 
 - Code update.
+- Short syntax code.
+- Code cleanup.
 
 ### 1.0.3 - 2020-01-15
 
