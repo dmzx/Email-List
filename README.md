@@ -1,6 +1,6 @@
 # Email List Extension
 
-[![Build Status](https://travis-ci.org/dmzx/Email-List.svg?branch=master)](https://travis-ci.org/dmzx/Email-List)
+[![Build Status](https://github.com/dmzx/Email-List/workflows/Tests/badge.svg)](https://github.com/phpbb-extensions/dmzx/Email-List)
 
 ## Install
 1. Download the latest release.
