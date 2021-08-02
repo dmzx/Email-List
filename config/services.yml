@@ -1,6 +1,6 @@
 services:
     dmzx.emaillist.controller:
-        class: dmzx\emaillist\controller\emaillist
+        class: 'dmzx\emaillist\controller\emaillist'
         arguments:
             - '@config'
             - '@controller.helper'
@@ -10,11 +10,11 @@ services:
             - '@request'
             - '@pagination'
     dmzx.emaillist.listener:
-        class: dmzx\emaillist\event\listener
+        class: 'dmzx\emaillist\event\listener'
         arguments:
             - '@controller.helper'
             - '%core.php_ext%'
             - '@template'
             - '@user'
         tags:
-            - { name: event.listener }
+            - { name: 'event.listener' }
